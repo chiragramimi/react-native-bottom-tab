@@ -1,0 +1,6 @@
+module Pods_LibApp {
+  umbrella header "Pods-LibApp-umbrella.h"
+
+  export *
+  module * { export * }
+}
