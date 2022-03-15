@@ -1,5 +1,7 @@
 const initialState = {
-    currentScreen:'HomeScreen'
+    currentScreen: 'HomeScreen',
+    clickedIndex: 0,
+    drawerEnable:false
 }
 
 const reducer = (state = initialState, action) => {
@@ -9,6 +11,16 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 currentScreen: action.payload,
             }
+            case "CLICK_INDEX":
+                return {
+                    ...state,
+                    clickedIndex: action.payload,
+                }
+                case "DRAWER_ENABLE":
+                    return {
+                        ...state,
+                        drawerEnable: action.payload,
+                    }
         default: 
             return state
     }

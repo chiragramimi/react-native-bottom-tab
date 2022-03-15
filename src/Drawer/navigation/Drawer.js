@@ -28,7 +28,9 @@ const DrawerContent = props => {
         labelStyle={styles.drawerLblStyle}
         onPress={() => {
           props.navigation.navigate('Home');
+          dispatch({type: 'DRAWER_ENABLE', payload: true});
           dispatch({type: 'CLICK_DRAWER', payload: 'HomeScreen'});
+          dispatch({type: 'CLICK_INDEX', payload: 0});
         }}
       />
       <DrawerItem
@@ -36,7 +38,9 @@ const DrawerContent = props => {
         labelStyle={styles.drawerLblStyle}
         onPress={() => {
           props.navigation.navigate('About');
+          dispatch({type: 'DRAWER_ENABLE', payload: true});
           dispatch({type: 'CLICK_DRAWER', payload: 'AboutScreen'});
+          dispatch({type: 'CLICK_INDEX', payload: 1});
         }}
       />
       <DrawerItem
@@ -44,7 +48,9 @@ const DrawerContent = props => {
         labelStyle={styles.drawerLblStyle}
         onPress={() => {
           props.navigation.navigate('Settings');
+          dispatch({type: 'DRAWER_ENABLE', payload: true});
           dispatch({type: 'CLICK_DRAWER', payload: 'SettingScreen'});
+          dispatch({type: 'CLICK_INDEX', payload: 2});
         }}
       />
     </DrawerContentScrollView>

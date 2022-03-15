@@ -4,7 +4,8 @@ import {Animated, TouchableHighlight} from 'react-native';
 import Screen from '../screens/GenericScreen';
 import styled from 'styled-components/native';
 import Icon1 from 'react-native-vector-icons/FontAwesome5';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useIsFocused } from '@react-navigation/native';
 // import AppLoading from 'expo-app-loading';
 // import {useFonts} from 'expo-font';
 // import MyCustomIconSet from '../assets/fonts/MyIconSet.ttf'
@@ -12,38 +13,39 @@ import {useSelector, useDispatch} from 'react-redux';
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigatorStyle2 = props => {
-  const [focusedTab, setFocusedTab] = useState(1);
+  const [focusedTab, setFocusedTab] = useState(0);
+  const clickedIndex = useSelector(state => state.reducer.clickedIndex);
   const mappable = [0, 1, 2, 3, 4];
   const screen = useSelector(state => state.reducer.currentScreen);
   const dispatch = useDispatch();
 
   const colors = mappable.map((item, index) => {
     return useState(
-      index === focusedTab ? new Animated.Value(1) : new Animated.Value(0),
+      (index===clickedIndex) ? new Animated.Value(1) : new Animated.Value(0),
     )[0];
   });
 
   const iconSizes = mappable.map((item, index) => {
     return useState(
-      index === focusedTab ? new Animated.Value(40) : new Animated.Value(28),
+      (index===clickedIndex) ? new Animated.Value(40) : new Animated.Value(28),
     )[0];
   });
 
   const boxSizes = mappable.map((item, index) => {
     return useState(
-      index === focusedTab ? new Animated.Value(70) : new Animated.Value(50),
+      (index===clickedIndex) ? new Animated.Value(70) : new Animated.Value(50),
     )[0];
   });
 
   const topMargins = mappable.map((item, index) => {
     return useState(
-      index === focusedTab ? new Animated.Value(-45) : new Animated.Value(-10),
+      (index===clickedIndex) ? new Animated.Value(-45) : new Animated.Value(-10),
     )[0];
   });
 
   useEffect(() => {
     colors.forEach((c, index) => {
-      let value = focusedTab === index ? 1 : 0;
+      let value = (index === clickedIndex) ? 1 : 0;
       Animated.timing(c, {
         toValue: value,
         duration: 200,
@@ -51,7 +53,7 @@ const BottomTabNavigatorStyle2 = props => {
       }).start();
     });
     iconSizes.forEach((s, index) => {
-      let value = focusedTab === index ? 40 : 28;
+      let value = (index === clickedIndex) ? 40 : 28;
       Animated.timing(s, {
         toValue: value,
         duration: 200,
@@ -59,7 +61,7 @@ const BottomTabNavigatorStyle2 = props => {
       }).start();
     });
     boxSizes.forEach((s, index) => {
-      let value = focusedTab === index ? 70 : 50;
+      let value = (index === clickedIndex) ? 70 : 50;
       Animated.timing(s, {
         toValue: value,
         duration: 200,
@@ -67,14 +69,14 @@ const BottomTabNavigatorStyle2 = props => {
       }).start();
     });
     topMargins.forEach((s, index) => {
-      let value = focusedTab === index ? -45 : -10;
+      let value = (index === clickedIndex) ? -45 : -10;
       Animated.timing(s, {
         toValue: value,
         duration: 200,
         useNativeDriver: false,
       }).start();
     });
-  }, [focusedTab, screen]);
+  }, [clickedIndex]);
 
   const bgColorAnimation = c =>
     c.interpolate({
@@ -142,22 +144,22 @@ const BottomTabNavigatorStyle2 = props => {
       icon: icons.settings,
     },
   ];
-  const onTabPress = (index) => {
-    console.log("index",index);
-    switch (index) {
+  const onTabPress = () => {
+    console.log("clickedIndex",clickedIndex);
+    switch (clickedIndex) {
       case 0:
-        setFocusedTab(index);
-        dispatch({type: 'CLICK_DRAWER', payload: 'HomeScreen'});
+        dispatch({ type: 'CLICK_DRAWER', payload: 'HomeScreen' });
+        dispatch({type: 'DRAWER_ENABLE', payload: false});
         break;
 
       case 1:
-        setFocusedTab(index);
-        dispatch({type: 'CLICK_DRAWER', payload: 'AboutScreen'});
+        dispatch({ type: 'CLICK_DRAWER', payload: 'AboutScreen' });
+        dispatch({type: 'DRAWER_ENABLE', payload: false});
         break;
 
       case 2:
-        setFocusedTab(index);
-        dispatch({type: 'CLICK_DRAWER', payload: 'SettingScreen'});
+        dispatch({ type: 'CLICK_DRAWER', payload: 'SettingScreen' });
+        dispatch({type: 'DRAWER_ENABLE', payload: false});
         break;
 
       default:
@@ -197,7 +199,8 @@ const BottomTabNavigatorStyle2 = props => {
           }}
           listeners={{
             tabPress: e => {
-              onTabPress(index);
+              dispatch({ type: 'CLICK_INDEX', payload: index });
+              onTabPress();
             },
           }}>
           {props => <Screen {...props} title={page.title} />}
